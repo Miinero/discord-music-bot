@@ -25,8 +25,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class Utils {
-    public Utils() {
-    }
 
     public static String getVideoTitle(String url) {
         String videoTitle = "Houve um erro ao pegar o nome da música";
@@ -137,8 +135,8 @@ public class Utils {
 
     private static List<String> getVideoIds(JsonObject jsonObject) {
         JsonArray contentsArray = jsonObject.getAsJsonObject("contents").getAsJsonObject("twoColumnSearchResultsRenderer").getAsJsonObject("primaryContents").getAsJsonObject("sectionListRenderer").getAsJsonArray("contents");
-        List<String> videoIds = new ArrayList();
-        Iterator var3 = contentsArray.iterator();
+        List<String> videoIds = new ArrayList<>();
+        Iterator<JsonElement> var3 = contentsArray.iterator();
 
         while(true) {
             JsonObject itemSectionRenderer;
@@ -147,15 +145,13 @@ public class Utils {
                     return videoIds;
                 }
 
-                JsonElement content = (JsonElement)var3.next();
+                JsonElement content = var3.next();
                 itemSectionRenderer = content.getAsJsonObject().getAsJsonObject("itemSectionRenderer");
             } while(itemSectionRenderer == null);
 
             JsonArray contents = itemSectionRenderer.getAsJsonArray("contents");
-            Iterator var7 = contents.iterator();
 
-            while(var7.hasNext()) {
-                JsonElement item = (JsonElement)var7.next();
+            for (JsonElement item : contents) {
                 JsonObject videoRenderer = item.getAsJsonObject().getAsJsonObject("videoRenderer");
                 if (videoRenderer != null) {
                     String videoId = videoRenderer.get("videoId").getAsString();
@@ -172,7 +168,7 @@ public class Utils {
         JsonObject ytInitialData = getYtInitialData(initialDataScript);
         List<String> videoIds = getVideoIds(ytInitialData);
         if (!videoIds.isEmpty()) {
-            String first = (String)videoIds.get(0);
+            String first = videoIds.get(0);
             System.out.println(first);
             return "https://www.youtube.com/watch?v=" + first;
         } else {
@@ -189,7 +185,7 @@ public class Utils {
     }
 
     public static String getRandomImageUrl() {
-        List<String> cache = new ArrayList();
+        List<String> cache = new ArrayList<>();
         cache.add("https://i.imgur.com/zaop2z4.jpeg");
         cache.add("https://i.imgur.com/NWf8gzZ.jpg");
         cache.add("https://i.imgur.com/wgCGizq.jpg");
@@ -197,11 +193,11 @@ public class Utils {
         cache.add("https://i.imgur.com/YcVKk4K.jpg");
         cache.add("https://i.imgur.com/gqV9gez.jpg");
         Random rand = new Random();
-        return (String)cache.get(rand.nextInt(cache.size() - 1));
+        return cache.get(rand.nextInt(cache.size() - 1));
     }
 
     public static String getRandomColor() {
-        List<String> cache = new ArrayList();
+        List<String> cache = new ArrayList<>();
         cache.add("#FFA500");
         cache.add("#FFFF00");
         cache.add("#00FF00");
@@ -209,7 +205,7 @@ public class Utils {
         cache.add("#5DD2EF");
         cache.add("#FF69B4");
         Random rand = new Random();
-        return (String)cache.get(rand.nextInt(cache.size() - 1));
+        return cache.get(rand.nextInt(cache.size() - 1));
     }
 
     public static void main(String[] args) {
